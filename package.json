@@ -1,0 +1,55 @@
+{
+  "name": "svn-helper",
+  "version": "0.1.0",
+  "author": "Tobias Friemel @tfriem",
+  "bin": {
+    "svn-helper": "./bin/run"
+  },
+  "bugs": "https://github.com/tfriem/svn-helper/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.8",
+    "@oclif/config": "^1.10.3",
+    "@oclif/plugin-help": "^2.1.4",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.21.0",
+    "@oclif/tslint": "^3.1.1",
+    "@types/node": "^10.12.18",
+    "globby": "^8.0.1",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.0",
+    "typescript": "^3.2.2"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/tfriem/svn-helper",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "svn-helper",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "tfriem/svn-helper",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "tslint -p . -t stylish",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
