@@ -1,8 +1,10 @@
 import {Command, flags} from '@oclif/command'
-import {switchToVersion, SvnVersion, BranchType} from '../svn'
 import {readJSON} from 'fs-extra'
-import * as path from 'path'
 import * as Listr from 'listr'
+import * as path from 'path'
+
+import {getSvnVersionFromStrings, svnVersionAsString} from '../command-utils'
+import {switchToVersion} from '../svn'
 
 export default class SwitchSubsystem extends Command {
   static description =
@@ -51,12 +53,12 @@ export default class SwitchSubsystem extends Command {
     }
 
     const tasks = subsystem.projects.map(project => {
-      const targetVersion = this.getSvnVersionFromStrings(
+      const targetVersion = getSvnVersionFromStrings(
         flags.branch,
         flags.version
       )
       return {
-        title: `Switch ${project} to ${this.svnVersionAsString(targetVersion)}`,
+        title: `Switch ${project} to ${svnVersionAsString(targetVersion)}`,
         task: () => switchToVersion(project, targetVersion)
       }
     })
@@ -64,47 +66,6 @@ export default class SwitchSubsystem extends Command {
     new Listr(tasks, {concurrent: true, exitOnError: false})
       .run()
       .catch(this.error)
-  }
-
-  private getSvnVersionFromStrings(
-    branchType: string,
-    version?: string
-  ): SvnVersion {
-    switch (branchType) {
-      case 'trunk':
-        return {type: BranchType.TRUNK}
-      case 'branches':
-        if (!version) {
-          throw Error('No version provided')
-        }
-        return {type: BranchType.BRANCH, version}
-      case 'tags':
-        if (!version) {
-          throw Error('No version provided')
-        }
-        return {type: BranchType.TAG, version}
-      default:
-        throw Error('Couldn not detect version')
-    }
-  }
-
-  private svnVersionAsString(version: SvnVersion): string {
-    let targetString
-    switch (version.type) {
-      case BranchType.TRUNK:
-        targetString = 'trunk'
-        break
-      case BranchType.BRANCH:
-        targetString = `branches/${version.version}`
-        break
-      case BranchType.TAG:
-        targetString = `tags/${version.version}`
-        break
-      default:
-        const _exhaustiveCheck: never = version
-        targetString = 'ERROR'
-    }
-    return targetString
   }
 
   private versionRequired(branch: string): boolean {

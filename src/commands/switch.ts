@@ -1,5 +1,7 @@
 import {Command, flags} from '@oclif/command'
-import {BranchType, SvnVersion, switchToVersion} from '../svn'
+
+import {getSvnVersionFromStrings} from '../command-utils'
+import {switchToVersion} from '../svn'
 
 export default class Switch extends Command {
   static description = 'switch repository to a different version'
@@ -36,32 +38,10 @@ export default class Switch extends Command {
 
     const output = await switchToVersion(
       args.path,
-      this.getSvnVersionFromStrings(flags.branch, flags.version)
+      getSvnVersionFromStrings(flags.branch, flags.version)
     )
     if (!flags.quiet) {
       this.log(output)
-    }
-  }
-
-  private getSvnVersionFromStrings(
-    branchType: string,
-    version?: string
-  ): SvnVersion {
-    switch (branchType) {
-      case 'trunk':
-        return {type: BranchType.TRUNK}
-      case 'branches':
-        if (!version) {
-          throw Error('No version provided')
-        }
-        return {type: BranchType.BRANCH, version}
-      case 'tags':
-        if (!version) {
-          throw Error('No version provided')
-        }
-        return {type: BranchType.TAG, version}
-      default:
-        throw Error('Couldn not detect version')
     }
   }
 
