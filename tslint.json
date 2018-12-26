@@ -1,8 +1,12 @@
 {
   "extends": "@oclif/tslint",
-  "rules" {
-    "ter-indent": [true, 2, {
-      "SwitchCase": 2
-    }]
+  "rules": {
+    "ter-indent": [
+      true,
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ]
   }
 }
