@@ -6,7 +6,9 @@ import * as Listr from 'listr'
 import * as _ from 'lodash'
 
 export default class SwitchRelease extends Command {
-  static description = 'switch repositories to a configured release'
+  static description = 'switch repositories to configured release versions'
+
+  static aliases = ['swr']
 
   static flags = {
     release: flags.string({
@@ -14,14 +16,13 @@ export default class SwitchRelease extends Command {
       required: true,
       description: 'release name'
     }),
-    quiet: flags.boolean({char: 'q', description: 'supress svn output'}),
     help: flags.help({char: 'h'})
   }
 
-  static args = [{name: 'path', default: '.'}]
+  static examples = ['$ svn-helper switch-release -r 1.2']
 
   async run() {
-    const {args, flags} = this.parse(SwitchRelease)
+    const {flags} = this.parse(SwitchRelease)
 
     const userConfig: Config = await readJSON(
       path.join(this.config.configDir, 'config.json')

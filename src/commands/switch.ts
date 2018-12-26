@@ -2,7 +2,7 @@ import {Command, flags} from '@oclif/command'
 import {BranchType, SvnVersion, switchToVersion} from '../svn'
 
 export default class Switch extends Command {
-  static description = 'switch repository to a different branch and version'
+  static description = 'switch repository to a different version'
 
   static aliases = ['sw']
 
@@ -21,8 +21,8 @@ export default class Switch extends Command {
   static args = [{name: 'path', default: '.'}]
 
   static examples = [
-    '$ svn-helper -b trunk',
-    '$ svn-helper -b branches -v 1.2.3'
+    '$ svn-helper switch -b trunk',
+    '$ svn-helper switch -b branches -v 1.2.3'
   ]
 
   async run() {

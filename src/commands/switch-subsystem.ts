@@ -3,10 +3,12 @@ import {switchToVersion, SvnVersion, BranchType} from '../svn'
 import {readJSON} from 'fs-extra'
 import * as path from 'path'
 import * as Listr from 'listr'
-import * as _ from 'lodash'
 
 export default class SwitchSubsystem extends Command {
-  static description = 'describe the command here'
+  static description =
+    'switch repositories for a configured subsystem to a different version'
+
+  static aliases = ['sws']
 
   static flags = {
     branch: flags.enum({
@@ -16,11 +18,15 @@ export default class SwitchSubsystem extends Command {
       required: true
     }),
     version: flags.string({char: 'v', description: 'version'}),
-    quiet: flags.boolean({char: 'q', description: 'supress svn output'}),
     help: flags.help({char: 'h'})
   }
 
   static args = [{name: 'subsystem'}]
+
+  static examples = [
+    '$ svn-helper switch-subsystem -b trunk subsystem1',
+    '$ svn-helper switch-subsystem -b branches -v 1.2.3 subsystem1'
+  ]
 
   async run() {
     const {args, flags} = this.parse(SwitchSubsystem)
