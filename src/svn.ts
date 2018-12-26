@@ -1,7 +1,4 @@
-import {exec} from 'child_process'
-import {promisify} from 'util'
-
-const execute = promisify(exec)
+import * as execa from 'execa'
 
 /**
  * Returns the version of a working copy at a given path.
@@ -31,11 +28,13 @@ export async function switchToVersion(
 }
 
 async function getUrl(path: string): Promise<string> {
-  return (await execute(`svn info --show-item url ${path}`)).stdout.trim()
+  const result = await execa.shell(`svn info --show-item url ${path}`)
+  return result.stdout
 }
 
-export async function svnSwitch(path: string, url: string) {
-  return (await execute(`svn switch ${url} ${path}`)).stdout.trim()
+async function svnSwitch(path: string, url: string): Promise<string> {
+  const result = await execa.shell(`svn switch ${url} ${path}`)
+  return result.stdout
 }
 
 function getSvnVersionFromUrl(url: string): SvnVersion | ParseError {
