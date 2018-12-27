@@ -1,4 +1,6 @@
+import * as fuzzy from 'fuzzy'
 import inquirer = require('inquirer')
+inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 
 import {BranchType, getBranchVersions, getTagVersions, SvnVersion} from './svn'
 
@@ -10,33 +12,40 @@ export async function askForVersion(
   path: string,
   type: BranchType
 ): Promise<string> {
-  let versions
+  let versions: Array<string>
   if (type === BranchType.BRANCH) {
     versions = await getBranchVersions(path)
   } else if (type === BranchType.TAG) {
     versions = await getTagVersions(path)
+  } else {
+    throw Error('Trunk has no versions')
   }
-  const responses: {version: string} = await inquirer.prompt([
-    {
-      name: 'version',
-      type: 'list',
-      choices: versions
-    }
-  ])
 
-  return responses.version
+  return ask('Version', versions)
 }
 
 export async function askForBranch(): Promise<string> {
-  const responses: {branch: string} = await inquirer.prompt([
+  return ask('Branch', ['trunk', 'branches', 'tags'])
+}
+
+export async function ask(
+  topic: string,
+  options: Array<string>
+): Promise<string> {
+  const responses: {result: string} = await inquirer.prompt([
     {
-      name: 'branch',
-      type: 'list',
-      choices: ['trunk', 'branches', 'tags']
+      name: 'result',
+      type: 'autocomplete',
+      message: topic,
+      // @ts-ignore
+      source: async (_, input: string) => {
+        input = input || ''
+        return fuzzy.filter(input, options).map(res => res.original)
+      }
     }
   ])
 
-  return responses.branch
+  return responses.result
 }
 
 export function getSvnVersionFromStrings(

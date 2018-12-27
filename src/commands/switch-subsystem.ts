@@ -1,8 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import inquirer = require('inquirer')
 import * as Listr from 'listr'
 
 import {
+  ask,
   askForBranch,
   askForVersion,
   getSvnBranchTypeFromString,
@@ -47,15 +47,7 @@ export default class SwitchSubsystem extends Command {
 
     if (!subsystemName) {
       const subsystems = userConfig.subsystems.map(subsystem => subsystem.name)
-      const responses: {subsystem: string} = await inquirer.prompt([
-        {
-          name: 'subsystem',
-          type: 'list',
-          choices: subsystems
-        }
-      ])
-
-      subsystemName = responses.subsystem
+      subsystemName = await ask('Subsystem', subsystems)
     }
 
     const subsystem = userConfig.subsystems.find(

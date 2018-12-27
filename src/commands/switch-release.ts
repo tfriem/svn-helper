@@ -1,9 +1,12 @@
 import {Command, flags} from '@oclif/command'
-import inquirer = require('inquirer')
 import * as Listr from 'listr'
 import * as _ from 'lodash'
 
-import {getSvnVersionFromConfig, svnVersionAsString} from '../command-utils'
+import {
+  ask,
+  getSvnVersionFromConfig,
+  svnVersionAsString
+} from '../command-utils'
 import {readConfig} from '../config'
 import {switchToVersion} from '../svn'
 
@@ -31,15 +34,7 @@ export default class SwitchRelease extends Command {
 
     if (!releaseName) {
       const releases = userConfig.releases.map(release => release.name)
-      const responses: {release: string} = await inquirer.prompt([
-        {
-          name: 'release',
-          type: 'list',
-          choices: releases
-        }
-      ])
-
-      releaseName = responses.release
+      releaseName = await ask('Release', releases)
     }
 
     const release = userConfig.releases.find(
