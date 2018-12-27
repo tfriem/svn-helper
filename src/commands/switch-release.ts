@@ -53,6 +53,6 @@ export default class SwitchRelease extends Command {
       )
       .value()
 
-    runTasks(tasks).catch(error => this.error(error))
+    runTasks(tasks).catch((error: string | Error) => this.error(error))
   }
 }

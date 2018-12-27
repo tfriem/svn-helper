@@ -109,14 +109,15 @@ export function svnVersionAsString(version: SvnVersion): string {
   }
 }
 
-export function createSwitchTask(project: string, targetVersion: SvnVersion) {
+export function createSwitchTask(
+  project: string,
+  targetVersion: SvnVersion
+): Listr.ListrTask {
   return {
     title: `Switch ${project} to ${svnVersionAsString(targetVersion)}`,
     task: () => switchToVersion(project, targetVersion),
     skip: async () =>
       _.isEqual(await getVersionFromWorkingCopy(project), targetVersion)
-        ? 'Already at target version'
-        : false
   }
 }
 
