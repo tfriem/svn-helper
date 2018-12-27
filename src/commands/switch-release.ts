@@ -1,14 +1,13 @@
 import {Command, flags} from '@oclif/command'
-import * as Listr from 'listr'
 import * as _ from 'lodash'
 
 import {
   ask,
+  createSwitchTask,
   getSvnVersionFromConfig,
-  svnVersionAsString
+  runTasks
 } from '../command-utils'
 import {readConfig} from '../config'
-import {switchToVersion} from '../svn'
 
 export default class SwitchRelease extends Command {
   static description = 'switch repositories to configured release versions'
@@ -48,18 +47,12 @@ export default class SwitchRelease extends Command {
 
     const tasks = _.chain(release.versions)
       .flatMap(version =>
-        version.projects.map(project => {
-          const targetVersion = getSvnVersionFromConfig(version.name)
-          return {
-            title: `Switch ${project} to ${svnVersionAsString(targetVersion)}`,
-            task: () => switchToVersion(project, targetVersion)
-          }
-        })
+        version.projects.map(project =>
+          createSwitchTask(project, getSvnVersionFromConfig(version.name))
+        )
       )
       .value()
 
-    new Listr(tasks, {concurrent: true, exitOnError: false})
-      .run()
-      .catch(this.error)
+    runTasks(tasks).catch(error => this.error(error))
   }
 }

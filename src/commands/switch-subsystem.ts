@@ -1,17 +1,16 @@
 import {Command, flags} from '@oclif/command'
-import * as Listr from 'listr'
 
 import {
   ask,
   askForBranch,
   askForVersion,
+  createSwitchTask,
   getSvnBranchTypeFromString,
   getSvnVersionFromStrings,
-  svnVersionAsString,
+  runTasks,
   versionRequired
 } from '../command-utils'
 import {readConfig} from '../config'
-import {switchToVersion} from '../svn'
 
 export default class SwitchSubsystem extends Command {
   static description =
@@ -72,16 +71,10 @@ export default class SwitchSubsystem extends Command {
       }
     }
 
-    const tasks = subsystem.projects.map(project => {
-      const targetVersion = getSvnVersionFromStrings(branch, version)
-      return {
-        title: `Switch ${project} to ${svnVersionAsString(targetVersion)}`,
-        task: () => switchToVersion(project, targetVersion)
-      }
-    })
+    const tasks = subsystem.projects.map(project =>
+      createSwitchTask(project, getSvnVersionFromStrings(branch, version))
+    )
 
-    new Listr(tasks, {concurrent: true, exitOnError: false})
-      .run()
-      .catch(this.error)
+    runTasks(tasks).catch(error => this.error(error))
   }
 }

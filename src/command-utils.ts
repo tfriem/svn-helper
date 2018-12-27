@@ -1,8 +1,16 @@
 import * as fuzzy from 'fuzzy'
 import inquirer = require('inquirer')
+import * as Listr from 'listr'
+
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 
-import {BranchType, getBranchVersions, getTagVersions, SvnVersion} from './svn'
+import {
+  BranchType,
+  getBranchVersions,
+  getTagVersions,
+  SvnVersion,
+  switchToVersion
+} from './svn'
 
 export function versionRequired(branchType: BranchType): boolean {
   return branchType !== BranchType.TRUNK
@@ -97,4 +105,15 @@ export function svnVersionAsString(version: SvnVersion): string {
     case BranchType.TAG:
       return `tags/${version.version}`
   }
+}
+
+export function createSwitchTask(project: string, targetVersion: SvnVersion) {
+  return {
+    title: `Switch ${project} to ${svnVersionAsString(targetVersion)}`,
+    task: () => switchToVersion(project, targetVersion)
+  }
+}
+
+export function runTasks(tasks: Array<Listr.ListrTask>) {
+  return new Listr(tasks, {concurrent: true, exitOnError: false}).run()
 }
