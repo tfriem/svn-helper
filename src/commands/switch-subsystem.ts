@@ -1,10 +1,14 @@
 import {Command, flags} from '@oclif/command'
+import inquirer = require('inquirer')
 import * as Listr from 'listr'
 
 import {
+  askForBranch,
   askForVersion,
+  getSvnBranchTypeFromString,
   getSvnVersionFromStrings,
-  svnVersionAsString
+  svnVersionAsString,
+  versionRequired
 } from '../command-utils'
 import {readConfig} from '../config'
 import {switchToVersion} from '../svn'
@@ -19,8 +23,7 @@ export default class SwitchSubsystem extends Command {
     branch: flags.enum({
       char: 'b',
       options: ['trunk', 'branches', 'tags'],
-      description: 'branch type',
-      required: true
+      description: 'branch type'
     }),
     version: flags.string({char: 'v', description: 'version'}),
     help: flags.help({char: 'h'})
@@ -36,11 +39,24 @@ export default class SwitchSubsystem extends Command {
   async run() {
     const {args, flags} = this.parse(SwitchSubsystem)
 
-    const subsystemName = args.subsystem
-    const branch = flags.branch
+    let subsystemName = args.subsystem
+    let branch = flags.branch
     let version = flags.version
 
     const userConfig = await readConfig()
+
+    if (!subsystemName) {
+      const subsystems = userConfig.subsystems.map(subsystem => subsystem.name)
+      const responses: {subsystem: string} = await inquirer.prompt([
+        {
+          name: 'subsystem',
+          type: 'list',
+          choices: subsystems
+        }
+      ])
+
+      subsystemName = responses.subsystem
+    }
 
     const subsystem = userConfig.subsystems.find(
       subsystem => subsystem.name === subsystemName
@@ -51,10 +67,16 @@ export default class SwitchSubsystem extends Command {
       return
     }
 
-    if (this.versionRequired(branch) && !version) {
+    if (!branch) {
+      branch = await askForBranch()
+    }
+
+    const branchType = getSvnBranchTypeFromString(branch)
+
+    if (versionRequired(branchType) && !version) {
       const firstProject = subsystem.projects[0]
       if (firstProject) {
-        version = await askForVersion(firstProject)
+        version = await askForVersion(firstProject, branchType)
       }
     }
 
@@ -69,9 +91,5 @@ export default class SwitchSubsystem extends Command {
     new Listr(tasks, {concurrent: true, exitOnError: false})
       .run()
       .catch(this.error)
-  }
-
-  private versionRequired(branch: string): boolean {
-    return branch === 'branches' || branch === 'tags'
   }
 }

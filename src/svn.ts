@@ -28,15 +28,24 @@ export async function switchToVersion(
 }
 
 export async function getBranches(path: string): Promise<Array<string>> {
+  return getVersions(path, 'branches')
+}
+
+export async function getTags(path: string): Promise<Array<string>> {
+  return getVersions(path, 'tags')
+}
+
+async function getVersions(path: string, type: string): Promise<Array<string>> {
   const url = await getUrl(path)
   const chunks = url.split('/')
 
   let branchesPath = ''
   for (let chunk of chunks) {
-    branchesPath += chunk + '/'
-    if (chunk === 'branches') {
+    if (chunk === 'branches' || chunk === 'trunk' || chunk === 'tags') {
+      branchesPath += type
       break
     }
+    branchesPath += chunk + '/'
   }
 
   const directories = await svnLs(branchesPath)

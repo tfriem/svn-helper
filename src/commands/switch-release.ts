@@ -1,4 +1,5 @@
 import {Command, flags} from '@oclif/command'
+import inquirer = require('inquirer')
 import * as Listr from 'listr'
 import * as _ from 'lodash'
 
@@ -14,7 +15,6 @@ export default class SwitchRelease extends Command {
   static flags = {
     release: flags.string({
       char: 'r',
-      required: true,
       description: 'release name'
     }),
     help: flags.help({char: 'h'})
@@ -27,8 +27,23 @@ export default class SwitchRelease extends Command {
 
     const userConfig = await readConfig()
 
+    let releaseName = flags.release
+
+    if (!releaseName) {
+      const releases = userConfig.releases.map(release => release.name)
+      const responses: {release: string} = await inquirer.prompt([
+        {
+          name: 'release',
+          type: 'list',
+          choices: releases
+        }
+      ])
+
+      releaseName = responses.release
+    }
+
     const release = userConfig.releases.find(
-      release => release.name === flags.release
+      release => release.name === releaseName
     )
 
     if (!release) {

@@ -1,9 +1,21 @@
 import inquirer = require('inquirer')
 
-import {BranchType, getBranches, SvnVersion} from './svn'
+import {BranchType, getBranches, getTags, SvnVersion} from './svn'
 
-export async function askForVersion(path: string): Promise<string> {
-  const versions = await getBranches(path)
+export function versionRequired(branchType: BranchType): boolean {
+  return branchType !== BranchType.TRUNK
+}
+
+export async function askForVersion(
+  path: string,
+  type: BranchType
+): Promise<string> {
+  let versions
+  if (type === BranchType.BRANCH) {
+    versions = await getBranches(path)
+  } else if (type === BranchType.TAG) {
+    versions = await getTags(path)
+  }
   const responses: {version: string} = await inquirer.prompt([
     {
       name: 'version',
@@ -13,6 +25,18 @@ export async function askForVersion(path: string): Promise<string> {
   ])
 
   return responses.version
+}
+
+export async function askForBranch(): Promise<string> {
+  const responses: {branch: string} = await inquirer.prompt([
+    {
+      name: 'branch',
+      type: 'list',
+      choices: ['trunk', 'branches', 'tags']
+    }
+  ])
+
+  return responses.branch
 }
 
 export function getSvnVersionFromStrings(
@@ -34,6 +58,19 @@ export function getSvnVersionFromStrings(
       return {type: BranchType.TAG, version}
     default:
       throw Error('Couldn not detect version')
+  }
+}
+
+export function getSvnBranchTypeFromString(branchType: string): BranchType {
+  switch (branchType) {
+    case 'trunk':
+      return BranchType.TRUNK
+    case 'branches':
+      return BranchType.BRANCH
+    case 'tags':
+      return BranchType.TAG
+    default:
+      throw Error('Couldn not detect branch type')
   }
 }
 

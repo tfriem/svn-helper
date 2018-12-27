@@ -1,6 +1,12 @@
 import {Command, flags} from '@oclif/command'
 
-import {askForVersion, getSvnVersionFromStrings} from '../command-utils'
+import {
+  askForBranch,
+  askForVersion,
+  getSvnBranchTypeFromString,
+  getSvnVersionFromStrings,
+  versionRequired
+} from '../command-utils'
 import {switchToVersion} from '../svn'
 
 export default class Switch extends Command {
@@ -12,8 +18,7 @@ export default class Switch extends Command {
     branch: flags.enum({
       char: 'b',
       options: ['trunk', 'branches', 'tags'],
-      description: 'branch type',
-      required: true
+      description: 'branch type'
     }),
     version: flags.string({char: 'v', description: 'version'}),
     quiet: flags.boolean({char: 'q', description: 'supress svn output'}),
@@ -31,11 +36,17 @@ export default class Switch extends Command {
     const {args, flags} = this.parse(Switch)
 
     const path = args.path
-    const branch = flags.branch
+    let branch = flags.branch
     let version = flags.version
 
-    if (this.versionRequired(branch) && !version) {
-      version = await askForVersion(path)
+    if (!branch) {
+      branch = await askForBranch()
+    }
+
+    const branchType = getSvnBranchTypeFromString(branch)
+
+    if (versionRequired(branchType) && !version) {
+      version = await askForVersion(path, branchType)
     }
 
     const output = await switchToVersion(
@@ -45,9 +56,5 @@ export default class Switch extends Command {
     if (!flags.quiet) {
       this.log(output)
     }
-  }
-
-  private versionRequired(branch: string): boolean {
-    return branch === 'branches' || branch === 'tags'
   }
 }
