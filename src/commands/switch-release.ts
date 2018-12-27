@@ -1,10 +1,9 @@
 import {Command, flags} from '@oclif/command'
-import {readJSON} from 'fs-extra'
 import * as Listr from 'listr'
 import * as _ from 'lodash'
-import * as path from 'path'
 
 import {getSvnVersionFromConfig, svnVersionAsString} from '../command-utils'
+import {readConfig} from '../config'
 import {switchToVersion} from '../svn'
 
 export default class SwitchRelease extends Command {
@@ -26,9 +25,7 @@ export default class SwitchRelease extends Command {
   async run() {
     const {flags} = this.parse(SwitchRelease)
 
-    const userConfig: Config = await readJSON(
-      path.join(this.config.configDir, 'config.json')
-    )
+    const userConfig = await readConfig()
 
     const release = userConfig.releases.find(
       release => release.name === flags.release
@@ -55,18 +52,4 @@ export default class SwitchRelease extends Command {
       .run()
       .catch(this.error)
   }
-}
-
-interface ConfigVersion {
-  name: string
-  projects: Array<string>
-}
-
-interface ConfigRelease {
-  name: string
-  versions: Array<ConfigVersion>
-}
-
-interface Config {
-  releases: Array<ConfigRelease>
 }

@@ -1,9 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import {readJSON} from 'fs-extra'
 import * as Listr from 'listr'
-import * as path from 'path'
 
 import {getSvnVersionFromStrings, svnVersionAsString} from '../command-utils'
+import {Config, readConfig} from '../config'
 import {switchToVersion} from '../svn'
 
 export default class SwitchSubsystem extends Command {
@@ -39,9 +38,7 @@ export default class SwitchSubsystem extends Command {
       )
     }
 
-    const userConfig: Config = await readJSON(
-      path.join(this.config.configDir, 'config.json')
-    )
+    const userConfig = await readConfig()
 
     const subsystem = userConfig.subsystems.find(
       subsystem => subsystem.name === args.subsystem
@@ -71,13 +68,4 @@ export default class SwitchSubsystem extends Command {
   private versionRequired(branch: string): boolean {
     return branch === 'branches' || branch === 'tags'
   }
-}
-
-interface ConfigSubsystem {
-  name: string
-  projects: Array<string>
-}
-
-interface Config {
-  subsystems: Array<ConfigSubsystem>
 }
