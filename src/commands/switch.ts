@@ -1,6 +1,6 @@
 import {Command, flags} from '@oclif/command'
 
-import {getSvnVersionFromStrings} from '../command-utils'
+import {askForVersion, getSvnVersionFromStrings} from '../command-utils'
 import {switchToVersion} from '../svn'
 
 export default class Switch extends Command {
@@ -30,15 +30,17 @@ export default class Switch extends Command {
   async run() {
     const {args, flags} = this.parse(Switch)
 
-    if (this.versionRequired(flags.branch) && !flags.version) {
-      this.error(
-        'A version is required when switching to a branch other than trunk'
-      )
+    const path = args.path
+    const branch = flags.branch
+    let version = flags.version
+
+    if (this.versionRequired(branch) && !version) {
+      version = await askForVersion(path)
     }
 
     const output = await switchToVersion(
-      args.path,
-      getSvnVersionFromStrings(flags.branch, flags.version)
+      path,
+      getSvnVersionFromStrings(branch, version)
     )
     if (!flags.quiet) {
       this.log(output)

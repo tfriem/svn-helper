@@ -1,4 +1,19 @@
-import {BranchType, SvnVersion} from './svn'
+import inquirer = require('inquirer')
+
+import {BranchType, getBranches, SvnVersion} from './svn'
+
+export async function askForVersion(path: string): Promise<string> {
+  const versions = await getBranches(path)
+  const responses: {version: string} = await inquirer.prompt([
+    {
+      name: 'version',
+      type: 'list',
+      choices: versions
+    }
+  ])
+
+  return responses.version
+}
 
 export function getSvnVersionFromStrings(
   branchType: string,

@@ -1,8 +1,12 @@
 import {Command, flags} from '@oclif/command'
 import * as Listr from 'listr'
 
-import {getSvnVersionFromStrings, svnVersionAsString} from '../command-utils'
-import {Config, readConfig} from '../config'
+import {
+  askForVersion,
+  getSvnVersionFromStrings,
+  svnVersionAsString
+} from '../command-utils'
+import {readConfig} from '../config'
 import {switchToVersion} from '../svn'
 
 export default class SwitchSubsystem extends Command {
@@ -32,28 +36,30 @@ export default class SwitchSubsystem extends Command {
   async run() {
     const {args, flags} = this.parse(SwitchSubsystem)
 
-    if (this.versionRequired(flags.branch) && !flags.version) {
-      this.error(
-        'A version is required when switching to a branch other than trunk'
-      )
-    }
+    const subsystemName = args.subsystem
+    const branch = flags.branch
+    let version = flags.version
 
     const userConfig = await readConfig()
 
     const subsystem = userConfig.subsystems.find(
-      subsystem => subsystem.name === args.subsystem
+      subsystem => subsystem.name === subsystemName
     )
 
     if (!subsystem) {
-      this.error(`Subsystem "${args.subsystem}" not found in configuration`)
+      this.error(`Subsystem "${subsystemName}" not found in configuration`)
       return
     }
 
+    if (this.versionRequired(branch) && !version) {
+      const firstProject = subsystem.projects[0]
+      if (firstProject) {
+        version = await askForVersion(firstProject)
+      }
+    }
+
     const tasks = subsystem.projects.map(project => {
-      const targetVersion = getSvnVersionFromStrings(
-        flags.branch,
-        flags.version
-      )
+      const targetVersion = getSvnVersionFromStrings(branch, version)
       return {
         title: `Switch ${project} to ${svnVersionAsString(targetVersion)}`,
         task: () => switchToVersion(project, targetVersion)

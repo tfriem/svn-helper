@@ -2,7 +2,7 @@ import * as execa from 'execa'
 
 /**
  * Returns the version of a working copy at a given path.
- * @param path
+ * @param path Filesystem path of the working copy
  */
 export async function getVersion(
   path: string
@@ -27,6 +27,26 @@ export async function switchToVersion(
   return svnSwitch(path, newUrl)
 }
 
+export async function getBranches(path: string): Promise<Array<string>> {
+  const url = await getUrl(path)
+  const chunks = url.split('/')
+
+  let branchesPath = ''
+  for (let chunk of chunks) {
+    branchesPath += chunk + '/'
+    if (chunk === 'branches') {
+      break
+    }
+  }
+
+  const directories = await svnLs(branchesPath)
+
+  const regex = /\/$/
+  return directories.map(entry => {
+    return entry.replace(regex, '')
+  })
+}
+
 async function getUrl(path: string): Promise<string> {
   const result = await execa.shell(`svn info --show-item url ${path}`)
   return result.stdout
@@ -35,6 +55,11 @@ async function getUrl(path: string): Promise<string> {
 async function svnSwitch(path: string, url: string): Promise<string> {
   const result = await execa.shell(`svn switch ${url} ${path}`)
   return result.stdout
+}
+
+async function svnLs(url: string): Promise<Array<string>> {
+  const result = await execa.shell(`svn ls ${url}`)
+  return result.stdout.split('\n')
 }
 
 function getSvnVersionFromUrl(url: string): SvnVersion | ParseError {
@@ -78,6 +103,7 @@ export function changeSvnVersionInUrl(
       targetString = `tags/${newVersion.version}`
       break
     default:
+      // tslint:disable-next-line: no-unused
       const _exhaustiveCheck: never = newVersion
       targetString = 'ERROR'
   }
