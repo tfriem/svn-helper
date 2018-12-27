@@ -1,6 +1,7 @@
 import * as fuzzy from 'fuzzy'
 import inquirer = require('inquirer')
 import * as Listr from 'listr'
+import * as _ from 'lodash'
 
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 
@@ -8,6 +9,7 @@ import {
   BranchType,
   getBranchVersions,
   getTagVersions,
+  getVersionFromWorkingCopy,
   SvnVersion,
   switchToVersion
 } from './svn'
@@ -110,7 +112,11 @@ export function svnVersionAsString(version: SvnVersion): string {
 export function createSwitchTask(project: string, targetVersion: SvnVersion) {
   return {
     title: `Switch ${project} to ${svnVersionAsString(targetVersion)}`,
-    task: () => switchToVersion(project, targetVersion)
+    task: () => switchToVersion(project, targetVersion),
+    skip: async () =>
+      _.isEqual(await getVersionFromWorkingCopy(project), targetVersion)
+        ? 'Already at target version'
+        : false
   }
 }
 
