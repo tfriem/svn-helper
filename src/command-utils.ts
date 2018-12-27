@@ -1,6 +1,6 @@
 import inquirer = require('inquirer')
 
-import {BranchType, getBranches, getTags, SvnVersion} from './svn'
+import {BranchType, getBranchVersions, getTagVersions, SvnVersion} from './svn'
 
 export function versionRequired(branchType: BranchType): boolean {
   return branchType !== BranchType.TRUNK
@@ -12,9 +12,9 @@ export async function askForVersion(
 ): Promise<string> {
   let versions
   if (type === BranchType.BRANCH) {
-    versions = await getBranches(path)
+    versions = await getBranchVersions(path)
   } else if (type === BranchType.TAG) {
-    versions = await getTags(path)
+    versions = await getTagVersions(path)
   }
   const responses: {version: string} = await inquirer.prompt([
     {

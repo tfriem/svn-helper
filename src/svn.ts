@@ -4,10 +4,10 @@ import * as execa from 'execa'
  * Returns the version of a working copy at a given path.
  * @param path Filesystem path of the working copy
  */
-export async function getVersion(
+export async function getVersionFromWorkingCopy(
   path: string
 ): Promise<SvnVersion | ParseError> {
-  const url = await getUrl(path)
+  const url = await getUrlFromWorkingCopy(path)
   return getSvnVersionFromUrl(url)
 }
 
@@ -21,22 +21,22 @@ export async function switchToVersion(
   path: string,
   version: SvnVersion
 ): Promise<string> {
-  const url = await getUrl(path)
+  const url = await getUrlFromWorkingCopy(path)
   const newUrl = changeSvnVersionInUrl(url, version)
 
   return svnSwitch(path, newUrl)
 }
 
-export async function getBranches(path: string): Promise<Array<string>> {
+export async function getBranchVersions(path: string): Promise<Array<string>> {
   return getVersions(path, 'branches')
 }
 
-export async function getTags(path: string): Promise<Array<string>> {
+export async function getTagVersions(path: string): Promise<Array<string>> {
   return getVersions(path, 'tags')
 }
 
 async function getVersions(path: string, type: string): Promise<Array<string>> {
-  const url = await getUrl(path)
+  const url = await getUrlFromWorkingCopy(path)
   const chunks = url.split('/')
 
   let branchesPath = ''
@@ -56,7 +56,7 @@ async function getVersions(path: string, type: string): Promise<Array<string>> {
   })
 }
 
-async function getUrl(path: string): Promise<string> {
+async function getUrlFromWorkingCopy(path: string): Promise<string> {
   const result = await execa.shell(`svn info --show-item url ${path}`)
   return result.stdout
 }
