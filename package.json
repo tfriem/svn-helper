@@ -1,6 +1,6 @@
 {
   "name": "svn-helper",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "author": "Tobias Friemel @tfriem",
   "bin": {
     "svn-helper": "./bin/run"
