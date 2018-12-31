@@ -1,5 +1,5 @@
 import * as fuzzy from 'fuzzy'
-import inquirer = require('inquirer')
+import * as inquirer from 'inquirer'
 import * as Listr from 'listr'
 import * as _ from 'lodash'
 
