@@ -75,6 +75,6 @@ export default class SwitchSubsystem extends Command {
       createSwitchTask(project, getSvnVersionFromStrings(branch, version))
     )
 
-    runTasks(tasks).catch(error => this.error(error))
+    await runTasks(tasks)
   }
 }
