@@ -1,5 +1,8 @@
 # svn-helper
 
+[![Build Status](https://travis-ci.org/tfriem/svn-helper.svg?branch=master)](https://travis-ci.org/tfriem/svn-helper)
+[![Coverage Status](https://coveralls.io/repos/github/tfriem/svn-helper/badge.svg?branch=travis)](https://coveralls.io/github/tfriem/svn-helper?branch=travis)
+[![codecov](https://codecov.io/gh/tfriem/svn-helper/branch/master/graph/badge.svg)](https://codecov.io/gh/tfriem/svn-helper)
 [![npm version](https://badge.fury.io/js/svn-helper.svg)](https://badge.fury.io/js/svn-helper)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
