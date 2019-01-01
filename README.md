@@ -1,5 +1,8 @@
 # svn-helper
 
+[![npm version](https://badge.fury.io/js/svn-helper.svg)](https://badge.fury.io/js/svn-helper)
+[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+
 _svn-helper_ is a command line tool that aims to improve working with multiple subversion repositories at specific versions. For this it provides commands to switch multiple working copies at once.
 
 ## Usage
