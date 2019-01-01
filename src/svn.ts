@@ -83,7 +83,7 @@ function getSvnVersionFromUrl(url: string): SvnVersion | ParseError {
     return {type: BranchType.TRUNK}
   }
 
-  if (chunks.length === 2) {
+  if (chunks.length === 2 && chunks[1] !== '') {
     const version = chunks[1]
     if (chunks[0] === 'branches') {
       return {type: BranchType.BRANCH, version}
