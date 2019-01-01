@@ -116,7 +116,7 @@ export function changeSvnVersionInUrl(
       const _exhaustiveCheck: never = newVersion
       targetString = 'ERROR'
   }
-  const regex = /(trunk|branches\/[^\/]*|tags\/[^\/]*)/
+  const regex = /trunk|branches\/?[^\/]*|tags\/?[^\/]*/
   return url.replace(regex, targetString)
 }
 
