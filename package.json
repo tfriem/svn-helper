@@ -68,7 +68,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p . -t stylish",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "test": "jest",
+    "test": "jest --coverage",
     "version": "oclif-dev readme && git add README.md",
     "postshrinkwrap": "replace --silent 'http://' 'https://' ./package-lock.json"
   },
