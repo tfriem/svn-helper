@@ -1,6 +1,80 @@
 # svn-helper
 
-WIP
+_svn-helper_ is a command line tool that aims to improve working with multiple subversion repositories at specific versions. For this it provides commands to switch multiple working copies at once.
+
+## Usage
+
+### Commands
+
+```
+USAGE
+  $ svn-helper [COMMAND]
+
+COMMANDS
+  help              display help for svn-helper
+  switch            switch repository to a different version
+  switch-release    switch repositories to configured release versions
+  switch-subsystem  switch repositories for a configured subsystem to a different version
+```
+
+### Switch
+
+```
+USAGE
+  $ svn-helper switch [PATH]
+
+OPTIONS
+  -b, --branch=(trunk|branches|tags)  branch type
+  -h, --help                          show CLI help
+  -q, --quiet                         supress svn output
+  -v, --version=version               version
+
+ALIASES
+  $ svn-helper sw
+
+EXAMPLES
+  $ svn-helper switch -b trunk
+  $ svn-helper switch -b branches -v 1.2.3
+```
+
+### Switch-Release
+
+```
+USAGE
+  $ svn-helper switch-release
+
+OPTIONS
+  -h, --help             show CLI help
+  -q, --quiet            supress svn output
+  -r, --release=release  release name
+
+ALIASES
+  $ svn-helper swr
+
+EXAMPLE
+  $ svn-helper switch-release -r 1.2
+
+```
+
+### Switch-Subsystem
+
+```
+USAGE
+  $ svn-helper switch-subsystem [SUBSYSTEM]
+
+OPTIONS
+  -b, --branch=(trunk|branches|tags)  branch type
+  -h, --help                          show CLI help
+  -q, --quiet                         supress svn output
+  -v, --version=version               version
+
+ALIASES
+  $ svn-helper sws
+
+EXAMPLES
+  $ svn-helper switch-subsystem -b trunk subsystem1
+  $ svn-helper switch-subsystem -b branches -v 1.2.3 subsystem1
+```
 
 ## Config example
 
@@ -26,17 +100,21 @@ WIP
   ],
   "subsystems": [
     {
-      "name": "main",
+      "name": "core",
       "projects": ["proj1"]
     },
     {
-      "name": "base",
+      "name": "pluginA",
       "projects": ["proj2"]
     },
     {
-      "name": "cctv",
+      "name": "SystemX",
       "projects": ["proj3", "proj4"]
     }
   ]
 }
 ```
+
+## Caveats
+
+It is assumed that the subversion repositories adhere to the recommend directory structure using trunk, branches/{version} and tags/{version}.
