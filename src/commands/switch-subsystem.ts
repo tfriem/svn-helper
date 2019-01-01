@@ -25,6 +25,7 @@ export default class SwitchSubsystem extends Command {
       description: 'branch type'
     }),
     version: flags.string({char: 'v', description: 'version'}),
+    quiet: flags.boolean({char: 'q', description: 'supress svn output'}),
     help: flags.help({char: 'h'})
   }
 
@@ -37,6 +38,8 @@ export default class SwitchSubsystem extends Command {
 
   async run() {
     const {args, flags} = this.parse(SwitchSubsystem)
+
+    const quiet = flags.quiet
 
     let subsystemName = args.subsystem
     let branch = flags.branch
@@ -75,6 +78,6 @@ export default class SwitchSubsystem extends Command {
       createSwitchTask(project, getSvnVersionFromStrings(branch, version))
     )
 
-    await runTasks(tasks)
+    await runTasks(tasks, quiet)
   }
 }

@@ -19,6 +19,7 @@ export default class SwitchRelease extends Command {
       char: 'r',
       description: 'release name'
     }),
+    quiet: flags.boolean({char: 'q', description: 'supress svn output'}),
     help: flags.help({char: 'h'})
   }
 
@@ -26,6 +27,8 @@ export default class SwitchRelease extends Command {
 
   async run() {
     const {flags} = this.parse(SwitchRelease)
+
+    const quiet = flags.quiet
 
     const userConfig = await readConfig()
 
@@ -53,6 +56,6 @@ export default class SwitchRelease extends Command {
       )
       .value()
 
-    await runTasks(tasks).catch((error: string | Error) => this.error(error))
+    await runTasks(tasks, quiet)
   }
 }

@@ -1,6 +1,7 @@
 {
   "extends": "@oclif/tslint",
   "rules": {
+    "no-console": [false],
     "ter-indent": [
       true,
       2,

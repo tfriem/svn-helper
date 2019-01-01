@@ -1,4 +1,6 @@
+import * as c from 'ansi-colors'
 import * as fuzzy from 'fuzzy'
+import * as indent from 'indent-string'
 import * as inquirer from 'inquirer'
 import * as Listr from 'listr'
 import * as _ from 'lodash'
@@ -115,12 +117,69 @@ export function createSwitchTask(
 ): Listr.ListrTask {
   return {
     title: `Switch ${project} to ${svnVersionAsString(targetVersion)}`,
-    task: () => switchToVersion(project, targetVersion),
+    task: async ctx => {
+      const stdout = await switchToVersion(project, targetVersion)
+      ctx.results.push({project, output: stdout})
+    },
     skip: async () =>
       _.isEqual(await getVersionFromWorkingCopy(project), targetVersion)
   }
 }
 
-export function runTasks(tasks: Array<Listr.ListrTask>) {
-  return new Listr(tasks, {concurrent: true, exitOnError: false}).run()
+export async function runTasks(tasks: Array<Listr.ListrTask>, quiet: boolean) {
+  try {
+    const context = await new Listr(tasks, {
+      concurrent: true,
+      exitOnError: false
+    }).run({
+      results: []
+    })
+    const results = context.results
+    if (!quiet) {
+      printResults(results)
+    }
+    return results
+  } catch (err) {
+    const results = err.context.results
+    if (!quiet) {
+      printResults(results)
+    }
+
+    err.errors.forEach((listError: ListrError) => {
+      error(`Command "${listError.cmd}" failed:`)
+      error(indent(listError.stderr, 2))
+    })
+  }
+}
+
+export function info(message: string) {
+  console.log(message)
+}
+
+export function warn(message: string) {
+  console.log(c.yellow(message))
+}
+
+export function error(message: string) {
+  console.log(c.red(message))
+}
+
+function printResults(results: Array<TaskResult>) {
+  results.forEach(result => {
+    info('')
+    info(indent(`${result.project} (stdout):`, 2))
+    info(indent(`${result.output}`, 4))
+  })
+}
+
+interface TaskResult {
+  project: string
+  output: string
+}
+
+interface ListrError {
+  cmd: string
+  stdout: string
+  stderr: string
+  code: number
 }
