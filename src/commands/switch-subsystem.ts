@@ -20,9 +20,9 @@ export default class SwitchSubsystem extends Command {
   static aliases = ['sws']
 
   static flags = {
-    branch: branchFlag(),
-    version: versionFlag(),
-    quiet: quietFlag(),
+    branch: branchFlag,
+    version: versionFlag,
+    quiet: quietFlag,
     help: flags.help({char: 'h'})
   }
 

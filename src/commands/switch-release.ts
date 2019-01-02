@@ -20,7 +20,7 @@ export default class SwitchRelease extends Command {
       char: 'r',
       description: 'release name'
     }),
-    quiet: quietFlag(),
+    quiet: quietFlag,
     help: flags.help({char: 'h'})
   }
 
