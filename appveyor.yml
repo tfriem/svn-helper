@@ -1,0 +1,13 @@
+environment:
+  nodejs_version: ''
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm ci
+
+test_script:
+  - node --version
+  - npm --version
+  - npm test
+
+build: off
