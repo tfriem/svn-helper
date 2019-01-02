@@ -99,16 +99,16 @@ function getSvnVersionFromUrl(url: string): SvnVersion | ParseError {
   }
   const chunks = match[1].split('/')
   if (chunks.length === 1 && chunks[0] === 'trunk') {
-    return {type: BranchType.TRUNK}
+    return Trunk
   }
 
   if (chunks.length === 2 && chunks[1] !== '') {
     const version = chunks[1]
     if (chunks[0] === 'branches') {
-      return {type: BranchType.BRANCH, version}
+      return new SvnVersion(BranchType.BRANCH, version)
     }
     if (chunks[0] === 'tags') {
-      return {type: BranchType.TAG, version}
+      return new SvnVersion(BranchType.TAG, version)
     }
   }
 
@@ -131,29 +131,25 @@ export function changeSvnVersionInUrl(
       targetString = `tags/${newVersion.version}`
       break
     default:
-      // tslint:disable-next-line: no-unused
-      const _exhaustiveCheck: never = newVersion
-      targetString = 'ERROR'
+      throw Error('Target version is invalid')
   }
   const regex = /trunk|branches\/?[^\/]*|tags\/?[^\/]*/
   return url.replace(regex, targetString)
 }
 
-interface Trunk {
-  type: BranchType.TRUNK
+export class SvnVersion {
+  constructor(
+    readonly type: BranchType,
+    readonly version: string | null = null
+  ) {
+    if (type === BranchType.TRUNK && version !== null) {
+      throw new Error('Trunk must not have a version.')
+    }
+    if (type !== BranchType.TRUNK && !version) {
+      throw new Error('Branches and tags require a version.')
+    }
+  }
 }
-
-interface Branch {
-  type: BranchType.BRANCH
-  version: string
-}
-
-interface Tag {
-  type: BranchType.TAG
-  version: string
-}
-
-export type SvnVersion = Trunk | Branch | Tag
 
 export interface ParseError {
   error: string
@@ -164,3 +160,5 @@ export enum BranchType {
   BRANCH,
   TAG
 }
+
+export const Trunk = new SvnVersion(BranchType.TRUNK)

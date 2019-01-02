@@ -15,9 +15,7 @@ describe('Commands', () => {
 
       await Switch.run(['-b', 'trunk'])
 
-      expect(switchToVersionMock.mock.calls[0][1]).toEqual({
-        type: svn.BranchType.TRUNK
-      })
+      expect(switchToVersionMock.mock.calls[0][1]).toEqual(svn.Trunk)
     })
     test('Switch to trunk after asking for branch', async () => {
       jest.spyOn(commandUtils, 'askForBranch').mockResolvedValue('trunk')
@@ -28,9 +26,7 @@ describe('Commands', () => {
 
       await Switch.run([])
 
-      expect(switchToVersionMock.mock.calls[0][1]).toEqual({
-        type: svn.BranchType.TRUNK
-      })
+      expect(switchToVersionMock.mock.calls[0][1]).toEqual(svn.Trunk)
     })
     test('Switch to branch 1.0.x', async () => {
       const targetVersion = '1.0.x'

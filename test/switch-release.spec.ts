@@ -34,12 +34,7 @@ describe('Commands', () => {
       await SwitchRelease.run([])
 
       expect(askMock).toBeCalled()
-      expect(switchToVersionMock.mock.calls[0]).toEqual([
-        'proj1',
-        {
-          type: svn.BranchType.TRUNK
-        }
-      ])
+      expect(switchToVersionMock.mock.calls[0]).toEqual(['proj1', svn.Trunk])
     })
     test('Unknown release', async () => {
       jest.spyOn(config, 'readConfig').mockResolvedValue({
@@ -90,18 +85,8 @@ describe('Commands', () => {
 
       await SwitchRelease.run(['-r', 'AllTrunk'])
 
-      expect(switchToVersionMock.mock.calls[0]).toEqual([
-        'proj1',
-        {
-          type: svn.BranchType.TRUNK
-        }
-      ])
-      expect(switchToVersionMock.mock.calls[1]).toEqual([
-        'proj2',
-        {
-          type: svn.BranchType.TRUNK
-        }
-      ])
+      expect(switchToVersionMock.mock.calls[0]).toEqual(['proj1', svn.Trunk])
+      expect(switchToVersionMock.mock.calls[1]).toEqual(['proj2', svn.Trunk])
     })
   })
 })

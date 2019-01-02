@@ -1,4 +1,4 @@
-import {BranchType, SvnVersion} from '../src/svn'
+import {BranchType, SvnVersion, Trunk} from '../src/svn'
 
 class SwitchToVersionTestType {
   constructor(
@@ -11,11 +11,11 @@ class SwitchToVersionTestType {
 export const getVersionFromWorkingCopyTestData = [
   {
     url: 'https://host:1234/repos/repo1/trunk',
-    result: {type: BranchType.TRUNK}
+    result: Trunk
   },
   {
     url: 'https://host:1234/repos/repo1/trunk/',
-    result: {type: BranchType.TRUNK}
+    result: Trunk
   },
   {
     url: 'https://host:1234/repos/repo1/branches',
@@ -45,22 +45,22 @@ export const getVersionFromWorkingCopyTestData = [
 
 export const switchToVersionTestData = [
   new SwitchToVersionTestType(
-    {type: BranchType.TRUNK},
+    Trunk,
     'https://host:1234/repos/repo1/branches/1.0.x',
     'https://host:1234/repos/repo1/trunk'
   ),
   new SwitchToVersionTestType(
-    {type: BranchType.TRUNK},
+    Trunk,
     'https://host:1234/repos/repo1/branches/1.0.x/',
     'https://host:1234/repos/repo1/trunk/'
   ),
   new SwitchToVersionTestType(
-    {type: BranchType.TRUNK},
+    Trunk,
     'https://host:1234/repos/repo1/branches',
     'https://host:1234/repos/repo1/trunk'
   ),
   new SwitchToVersionTestType(
-    {type: BranchType.TRUNK},
+    Trunk,
     'https://host:1234/repos/repo1/branches/',
     'https://host:1234/repos/repo1/trunk'
   ),

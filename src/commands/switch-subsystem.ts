@@ -6,12 +6,12 @@ import {
   askForVersion,
   createSwitchTask,
   getSvnBranchTypeFromString,
-  getSvnVersionFromStrings,
   runTasks,
   versionRequired
 } from '../command-utils'
-import {readConfig} from '../config'
+import {Config, readConfig} from '../config'
 import {branchFlag, quietFlag, versionFlag} from '../flags'
+import {SvnVersion} from '../svn'
 
 export default class SwitchSubsystem extends Command {
   static description =
@@ -38,26 +38,48 @@ export default class SwitchSubsystem extends Command {
 
     const quiet = flags.quiet
 
-    let subsystemName = args.subsystem
-    let branch = flags.branch
-    let version = flags.version
+    const subsystemName = args.subsystem
+    const branchName = flags.branch
+    const versionName = flags.version
 
     const userConfig = await readConfig()
 
-    if (!subsystemName) {
-      const subsystems = userConfig.subsystems.map(subsystem => subsystem.name)
-      subsystemName = await ask('Subsystem', subsystems)
-    }
-
-    const subsystem = userConfig.subsystems.find(
-      subsystem => subsystem.name === subsystemName
-    )
+    const subsystem = await this.handleSubsystem(subsystemName, userConfig)
 
     if (!subsystem) {
       this.error(`Subsystem "${subsystemName}" not found in configuration`)
       return
     }
 
+    const targetVersion = await this.handleBranchAndVersion(
+      branchName,
+      versionName,
+      subsystem.projects[0]
+    )
+
+    const tasks = subsystem.projects.map(project =>
+      createSwitchTask(project, targetVersion)
+    )
+
+    await runTasks(tasks, quiet)
+  }
+
+  private async handleSubsystem(subsystemName: string, userConfig: Config) {
+    if (!subsystemName) {
+      const subsystems = userConfig.subsystems.map(subsystem => subsystem.name)
+      subsystemName = await ask('Subsystem', subsystems)
+    }
+
+    return userConfig.subsystems.find(
+      subsystem => subsystem.name === subsystemName
+    )
+  }
+
+  private async handleBranchAndVersion(
+    branch: string,
+    version: string | undefined,
+    referenceProject: string
+  ) {
     if (!branch) {
       branch = await askForBranch()
     }
@@ -65,16 +87,12 @@ export default class SwitchSubsystem extends Command {
     const branchType = getSvnBranchTypeFromString(branch)
 
     if (versionRequired(branchType) && !version) {
-      const firstProject = subsystem.projects[0]
+      const firstProject = referenceProject
       if (firstProject) {
         version = await askForVersion(firstProject, branchType)
       }
     }
 
-    const tasks = subsystem.projects.map(project =>
-      createSwitchTask(project, getSvnVersionFromStrings(branch, version))
-    )
-
-    await runTasks(tasks, quiet)
+    return new SvnVersion(branchType, version)
   }
 }

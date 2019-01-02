@@ -61,25 +61,11 @@ export async function ask(
 }
 
 export function getSvnVersionFromStrings(
-  branchType: string,
+  branch: string,
   version?: string
 ): SvnVersion {
-  switch (branchType) {
-    case 'trunk':
-      return {type: BranchType.TRUNK}
-    case 'branches':
-      if (!version) {
-        throw Error('No version provided')
-      }
-      return {type: BranchType.BRANCH, version}
-    case 'tags':
-      if (!version) {
-        throw Error('No version provided')
-      }
-      return {type: BranchType.TAG, version}
-    default:
-      throw Error('Couldn not detect version')
-  }
+  const branchType = getSvnBranchTypeFromString(branch)
+  return new SvnVersion(branchType, version)
 }
 
 export function getSvnBranchTypeFromString(branchType: string): BranchType {
