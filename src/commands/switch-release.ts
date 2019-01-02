@@ -8,7 +8,7 @@ import {
   runTasks
 } from '../command-utils'
 import {readConfig} from '../config'
-import {quiet} from '../flags'
+import {quietFlag} from '../flags'
 
 export default class SwitchRelease extends Command {
   static description = 'switch repositories to configured release versions'
@@ -20,7 +20,7 @@ export default class SwitchRelease extends Command {
       char: 'r',
       description: 'release name'
     }),
-    quiet: quiet(),
+    quiet: quietFlag(),
     help: flags.help({char: 'h'})
   }
 

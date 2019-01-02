@@ -7,7 +7,7 @@ import {
   getSvnVersionFromStrings,
   versionRequired
 } from '../command-utils'
-import {branch, quiet, version} from '../flags'
+import {branchFlag, quietFlag, versionFlag} from '../flags'
 import {switchToVersion} from '../svn'
 
 export default class Switch extends Command {
@@ -16,9 +16,9 @@ export default class Switch extends Command {
   static aliases = ['sw']
 
   static flags = {
-    branch: branch(),
-    version: version(),
-    quiet: quiet(),
+    branch: branchFlag(),
+    version: versionFlag(),
+    quiet: quietFlag(),
     help: flags.help({char: 'h'})
   }
 
