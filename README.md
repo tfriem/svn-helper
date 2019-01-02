@@ -1,6 +1,7 @@
 # svn-helper
 
 [![Build Status](https://travis-ci.org/tfriem/svn-helper.svg?branch=master)](https://travis-ci.org/tfriem/svn-helper)
+[![Maintainability](https://api.codeclimate.com/v1/badges/cbea87bd571387a1a3af/maintainability)](https://codeclimate.com/github/tfriem/svn-helper/maintainability)
 [![Coverage Status](https://coveralls.io/repos/github/tfriem/svn-helper/badge.svg?branch=master)](https://coveralls.io/github/tfriem/svn-helper?branch=master)
 [![codecov](https://codecov.io/gh/tfriem/svn-helper/branch/master/graph/badge.svg)](https://codecov.io/gh/tfriem/svn-helper)
 [![npm version](https://badge.fury.io/js/svn-helper.svg)](https://badge.fury.io/js/svn-helper)
