@@ -4,11 +4,10 @@ import {
   askForBranch,
   askForVersion,
   getSvnBranchTypeFromString,
-  getSvnVersionFromStrings,
   versionRequired
 } from '../command-utils'
 import {branchFlag, quietFlag, versionFlag} from '../flags'
-import {switchToVersion} from '../svn'
+import {SvnVersion, switchToVersion} from '../svn'
 
 export default class Switch extends Command {
   static description = 'switch repository to a different version'
@@ -48,7 +47,7 @@ export default class Switch extends Command {
 
     const output = await switchToVersion(
       path,
-      getSvnVersionFromStrings(branch, version)
+      new SvnVersion(branchType, version)
     )
     if (!flags.quiet) {
       this.log(output)

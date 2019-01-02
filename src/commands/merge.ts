@@ -4,11 +4,10 @@ import {
   askForBranch,
   askForVersion,
   getSvnBranchTypeFromString,
-  getSvnVersionFromStrings,
   versionRequired
 } from '../command-utils'
 import {branchFlag, quietFlag, versionFlag} from '../flags'
-import {mergeFromVersion} from '../svn'
+import {mergeFromVersion, SvnVersion} from '../svn'
 
 export default class Merge extends Command {
   static description = 'merge from another version'
@@ -48,7 +47,7 @@ export default class Merge extends Command {
 
     const output = await mergeFromVersion(
       path,
-      getSvnVersionFromStrings(branch, version)
+      new SvnVersion(branchType, version)
     )
     if (!flags.quiet) {
       this.log(output)

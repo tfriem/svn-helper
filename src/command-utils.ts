@@ -60,14 +60,6 @@ export async function ask(
   return responses.result
 }
 
-export function getSvnVersionFromStrings(
-  branch: string,
-  version?: string
-): SvnVersion {
-  const branchType = getSvnBranchTypeFromString(branch)
-  return new SvnVersion(branchType, version)
-}
-
 export function getSvnBranchTypeFromString(branchType: string): BranchType {
   switch (branchType) {
     case 'trunk':
@@ -82,8 +74,8 @@ export function getSvnBranchTypeFromString(branchType: string): BranchType {
 }
 
 export function getSvnVersionFromConfig(versionString: string): SvnVersion {
-  const [branchType, version] = versionString.split('/')
-  return getSvnVersionFromStrings(branchType, version)
+  const [branch, version] = versionString.split('/')
+  return new SvnVersion(getSvnBranchTypeFromString(branch), version)
 }
 
 export function svnVersionAsString(version: SvnVersion): string {
