@@ -27,6 +27,16 @@ export async function switchToVersion(
   return svnSwitch(path, newUrl)
 }
 
+export async function mergeFromVersion(
+  path: string,
+  version: SvnVersion
+): Promise<string> {
+  const url = await getUrlFromWorkingCopy(path)
+  const newUrl = changeSvnVersionInUrl(url, version)
+
+  return svnMerge(path, newUrl)
+}
+
 export async function getBranchVersions(path: string): Promise<Array<string>> {
   return getVersions(path, 'branches')
 }
@@ -63,6 +73,11 @@ async function getUrlFromWorkingCopy(path: string): Promise<string> {
 
 async function svnSwitch(path: string, url: string): Promise<string> {
   const result = await execa.shell(`svn switch ${url} ${path}`)
+  return result.stdout
+}
+
+async function svnMerge(path: string, url: string): Promise<string> {
+  const result = await execa.shell(`svn merge ${url} ${path}`)
   return result.stdout
 }
 
