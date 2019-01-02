@@ -3,6 +3,12 @@ node_js:
   - 'node'
   - 'lts/*'
 cache: npm
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 after_success:
   - curl -s https://codecov.io/bash | bash
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
