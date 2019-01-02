@@ -68,7 +68,11 @@ async function svnSwitch(path: string, url: string): Promise<string> {
 
 async function svnLs(url: string): Promise<Array<string>> {
   const result = await execa.shell(`svn ls ${url}`)
-  return result.stdout.split('\n')
+  const entries = result.stdout.split('\n')
+  if (entries.length === 1 && entries[0] === '') {
+    return []
+  }
+  return entries
 }
 
 function getSvnVersionFromUrl(url: string): SvnVersion | ParseError {
