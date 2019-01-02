@@ -11,6 +11,7 @@ import {
   versionRequired
 } from '../command-utils'
 import {readConfig} from '../config'
+import {branch, quiet, version} from '../flags'
 
 export default class SwitchSubsystem extends Command {
   static description =
@@ -19,13 +20,9 @@ export default class SwitchSubsystem extends Command {
   static aliases = ['sws']
 
   static flags = {
-    branch: flags.enum({
-      char: 'b',
-      options: ['trunk', 'branches', 'tags'],
-      description: 'branch type'
-    }),
-    version: flags.string({char: 'v', description: 'version'}),
-    quiet: flags.boolean({char: 'q', description: 'supress svn output'}),
+    branch: branch(),
+    version: version(),
+    quiet: quiet(),
     help: flags.help({char: 'h'})
   }
 

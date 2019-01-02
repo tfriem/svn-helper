@@ -8,6 +8,7 @@ import {
   runTasks
 } from '../command-utils'
 import {readConfig} from '../config'
+import {quiet} from '../flags'
 
 export default class SwitchRelease extends Command {
   static description = 'switch repositories to configured release versions'
@@ -19,7 +20,7 @@ export default class SwitchRelease extends Command {
       char: 'r',
       description: 'release name'
     }),
-    quiet: flags.boolean({char: 'q', description: 'supress svn output'}),
+    quiet: quiet(),
     help: flags.help({char: 'h'})
   }
 
