@@ -91,7 +91,7 @@ export function getSvnBranchTypeFromString(branchType: string): BranchType {
     case 'tags':
       return BranchType.TAG
     default:
-      throw Error('Couldn not detect branch type')
+      throw Error('Could not detect branch type')
   }
 }
 
