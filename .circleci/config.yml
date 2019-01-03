@@ -1,8 +1,8 @@
 version: 2
 jobs:
-  build:
+  node-latest: &test
     docker:
-      - image: circleci/node:lts
+      - image: circleci/node:latest
 
     working_directory: ~/repo
 
@@ -21,3 +21,15 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: npm test
+
+  node-lts:
+    <<: *test
+    docker:
+      - image: circleci/node:lts
+
+workflows:
+  version: 2
+  'test':
+    jobs:
+      - node-latest
+      - node-lts
