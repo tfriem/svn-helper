@@ -22,5 +22,5 @@ jobs:
         skip_cleanup: true
         script:
           - npx semantic-release
-      on:
-        branch: master
+        on:
+          branch: master
