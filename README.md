@@ -45,6 +45,26 @@ EXAMPLES
   $ svn-helper switch -b branches -v 1.2.3
 ```
 
+### Merge
+
+```
+USAGE
+  $ svn-helper merge [PATH]
+
+OPTIONS
+  -b, --branch=(trunk|branches|tags)  branch type
+  -h, --help                          show CLI help
+  -q, --quiet                         supress svn output
+  -v, --version=version               version
+
+ALIASES
+  $ svn-helper m
+
+EXAMPLES
+  $ svn-helper merge -b trunk
+  $ svn-helper merge -b branches -v 1.2.3
+```
+
 ### Switch-Release
 
 ```
