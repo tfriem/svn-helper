@@ -15,12 +15,12 @@ after_success:
 
 jobs:
   include:
-    - stage: npm release
-      node_js: 'lts/*'
+    - stage: release
+      node_js: lts/*
       deploy:
-        provider: npm
-        email: $NPM_MAIL
-        api_key: $NPM_TOKEN
+        provider: script
         skip_cleanup: true
-        on:
-          tags: true
+        script:
+          - npx semantic-release
+      on:
+        branch: master
