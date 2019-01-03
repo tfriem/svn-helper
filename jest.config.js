@@ -6,5 +6,6 @@ module.exports = {
     '!**/node_modules/**',
     '!**/test/**',
     '!src/index.ts'
-  ]
+  ],
+  reporters: ['default', 'jest-junit']
 }

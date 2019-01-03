@@ -20,7 +20,10 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm test
+      - run:
+          command: npm test
+          environment:
+            JEST_JUNIT_OUTPUT: 'reports/junit/js-test-results.xml'
 
   node-lts:
     <<: *test
