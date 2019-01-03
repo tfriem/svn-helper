@@ -113,5 +113,14 @@ describe('Commands', () => {
         version: targetVersion
       })
     })
+    test('Unknown subsystem', async () => {
+      jest
+        .spyOn(config, 'readConfig')
+        .mockResolvedValue({subsystems: [{name: 'core', projects: ['proj1']}]})
+
+      await expect(
+        SwitchSubsystem.run(['-b', 'branches', 'UnknownSubsystem'])
+      ).rejects.toThrow()
+    })
   })
 })
