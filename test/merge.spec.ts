@@ -15,7 +15,9 @@ describe('Commands', () => {
 
       await Merge.run(['-b', 'trunk'])
 
-      expect(mergeFromVersionMock.mock.calls[0][1]).toEqual(svn.Trunk)
+      expect(mergeFromVersionMock.mock.calls[0][1]).toEqual(
+        svn.SvnVersion.Trunk
+      )
     })
     test('Merge from trunk after asking for branch', async () => {
       jest.spyOn(commandUtils, 'askForBranch').mockResolvedValue('trunk')
@@ -26,7 +28,9 @@ describe('Commands', () => {
 
       await Merge.run([])
 
-      expect(mergeFromVersionMock.mock.calls[0][1]).toEqual(svn.Trunk)
+      expect(mergeFromVersionMock.mock.calls[0][1]).toEqual(
+        svn.SvnVersion.Trunk
+      )
     })
     test('Merge from branch 1.0.x', async () => {
       const targetVersion = '1.0.x'

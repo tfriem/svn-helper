@@ -1,4 +1,4 @@
-import {BranchType, SvnVersion, Trunk} from '../src/svn'
+import {BranchType, SvnVersion} from '../src/svn'
 
 class SwitchToVersionTestType {
   constructor(
@@ -11,19 +11,19 @@ class SwitchToVersionTestType {
 export const getVersionFromWorkingCopyTestData = [
   {
     url: 'https://host:1234/repos/repo1/trunk',
-    result: Trunk
+    result: SvnVersion.Trunk
   },
   {
     url: 'https://host:1234/repos/repo1/trunk/',
-    result: Trunk
+    result: SvnVersion.Trunk
   },
   {
     url: 'https://host:1234/repos/repo1/branches',
-    result: {error: 'Could not parse version from URL'}
+    result: null
   },
   {
     url: 'https://host:1234/repos/repo1/branches/',
-    result: {error: 'Could not parse version from URL'}
+    result: null
   },
   {
     url: 'https://host:1234/repos/repo1/branches/1.0.x',
@@ -45,22 +45,22 @@ export const getVersionFromWorkingCopyTestData = [
 
 export const switchToVersionTestData = [
   new SwitchToVersionTestType(
-    Trunk,
+    SvnVersion.Trunk,
     'https://host:1234/repos/repo1/branches/1.0.x',
     'https://host:1234/repos/repo1/trunk'
   ),
   new SwitchToVersionTestType(
-    Trunk,
+    SvnVersion.Trunk,
     'https://host:1234/repos/repo1/branches/1.0.x/',
     'https://host:1234/repos/repo1/trunk/'
   ),
   new SwitchToVersionTestType(
-    Trunk,
+    SvnVersion.Trunk,
     'https://host:1234/repos/repo1/branches',
     'https://host:1234/repos/repo1/trunk'
   ),
   new SwitchToVersionTestType(
-    Trunk,
+    SvnVersion.Trunk,
     'https://host:1234/repos/repo1/branches/',
     'https://host:1234/repos/repo1/trunk'
   ),

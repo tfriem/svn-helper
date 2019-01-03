@@ -1,6 +1,7 @@
 import * as commandUtils from '../src/command-utils'
 import Switch from '../src/commands/switch'
 import * as svn from '../src/svn'
+import {BranchType, SvnVersion} from '../src/svn/version'
 
 afterEach(() => {
   jest.restoreAllMocks()
@@ -15,7 +16,7 @@ describe('Commands', () => {
 
       await Switch.run(['-b', 'trunk'])
 
-      expect(switchToVersionMock.mock.calls[0][1]).toEqual(svn.Trunk)
+      expect(switchToVersionMock.mock.calls[0][1]).toEqual(SvnVersion.Trunk)
     })
     test('Switch to trunk after asking for branch', async () => {
       jest.spyOn(commandUtils, 'askForBranch').mockResolvedValue('trunk')
@@ -26,7 +27,7 @@ describe('Commands', () => {
 
       await Switch.run([])
 
-      expect(switchToVersionMock.mock.calls[0][1]).toEqual(svn.Trunk)
+      expect(switchToVersionMock.mock.calls[0][1]).toEqual(SvnVersion.Trunk)
     })
     test('Switch to branch 1.0.x', async () => {
       const targetVersion = '1.0.x'
@@ -37,7 +38,7 @@ describe('Commands', () => {
       await Switch.run(['-b', 'branches', '-v', targetVersion])
 
       expect(switchToVersionMock.mock.calls[0][1]).toEqual({
-        type: svn.BranchType.BRANCH,
+        type: BranchType.BRANCH,
         version: targetVersion
       })
     })
@@ -54,7 +55,7 @@ describe('Commands', () => {
       await Switch.run([])
 
       expect(switchToVersionMock.mock.calls[0][1]).toEqual({
-        type: svn.BranchType.BRANCH,
+        type: BranchType.BRANCH,
         version: targetVersion
       })
     })
@@ -67,7 +68,7 @@ describe('Commands', () => {
       await Switch.run(['-b', 'tags', '-v', targetVersion])
 
       expect(switchToVersionMock.mock.calls[0][1]).toEqual({
-        type: svn.BranchType.TAG,
+        type: BranchType.TAG,
         version: targetVersion
       })
     })
@@ -84,7 +85,7 @@ describe('Commands', () => {
       await Switch.run([])
 
       expect(switchToVersionMock.mock.calls[0][1]).toEqual({
-        type: svn.BranchType.TAG,
+        type: BranchType.TAG,
         version: targetVersion
       })
     })

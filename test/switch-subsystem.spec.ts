@@ -24,14 +24,16 @@ describe('Commands', () => {
 
       await SwitchSubsystem.run(['-b', 'trunk', 'core'])
 
-      expect(switchToVersionMock.mock.calls[0][1]).toEqual(svn.Trunk)
+      expect(switchToVersionMock.mock.calls[0][1]).toEqual(svn.SvnVersion.Trunk)
     })
     test('Skip switch to trunk if already trunk', async () => {
       jest
         .spyOn(config, 'readConfig')
         .mockResolvedValue({subsystems: [{name: 'core', projects: ['proj1']}]})
 
-      jest.spyOn(svn, 'getVersionFromWorkingCopy').mockResolvedValue(svn.Trunk)
+      jest
+        .spyOn(svn, 'getVersionFromWorkingCopy')
+        .mockResolvedValue(svn.SvnVersion.Trunk)
 
       const switchToVersionMock = jest
         .spyOn(svn, 'switchToVersion')
@@ -58,7 +60,7 @@ describe('Commands', () => {
 
       await SwitchSubsystem.run(['core'])
 
-      expect(switchToVersionMock.mock.calls[0][1]).toEqual(svn.Trunk)
+      expect(switchToVersionMock.mock.calls[0][1]).toEqual(svn.SvnVersion.Trunk)
     })
     test('Switch to branch 1.2.3 after asking for subsystem, branch and version', async () => {
       const targetVersion = '1.2.3'
@@ -96,7 +98,9 @@ describe('Commands', () => {
 
       jest.spyOn(commandUtils, 'askForVersion').mockResolvedValue(targetVersion)
 
-      jest.spyOn(svn, 'getVersionFromWorkingCopy').mockResolvedValue(svn.Trunk)
+      jest
+        .spyOn(svn, 'getVersionFromWorkingCopy')
+        .mockResolvedValue(svn.SvnVersion.Trunk)
 
       const switchToVersionMock = jest
         .spyOn(svn, 'switchToVersion')
