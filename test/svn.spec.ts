@@ -4,7 +4,7 @@ import {
   getVersionFromWorkingCopy,
   switchToVersion
 } from '../src/svn'
-import {svnInfoUrl, svnSwitch, svnLs} from '../src/svn/shell'
+import {svnInfoUrl, svnLs, svnSwitch} from '../src/svn/shell'
 
 import {mocked, successfulShellReturn} from './helper'
 import {

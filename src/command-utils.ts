@@ -124,6 +124,7 @@ export async function runTasks(tasks: Array<Listr.ListrTask>, quiet: boolean) {
     }
 
     err.errors.forEach((listError: ListrError) => {
+      error('')
       error(`Command "${listError.cmd}" failed:`)
       error(indent(listError.stderr, 2))
     })
