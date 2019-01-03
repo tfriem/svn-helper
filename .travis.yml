@@ -21,4 +21,6 @@ jobs:
         provider: npm
         email: $NPM_MAIL
         api_key: $NPM_TOKEN
-        on: deploy-npm-release
+        skip_cleanup: true
+        on:
+          tags: true
