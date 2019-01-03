@@ -15,29 +15,33 @@ export async function getUrlFromWorkingCopy(path: string) {
  * @param url svn url
  */
 export function getSvnVersionFromUrl(url: string): SvnVersion {
-  const regex = /(trunk|branches\/[^\/]*|tags\/[^\/]*)/
-  const match = regex.exec(url)
+  const chunks = extractVersionPartFromUrl(url).split('/')
 
-  if (!match) {
-    throw Error('Could not parse version from URL')
-  }
-
-  const chunks = match[1].split('/')
-  if (chunks.length === 1 && chunks[0] === 'trunk') {
+  if (chunks[0] === 'trunk') {
     return SvnVersion.Trunk
   }
 
   if (chunks.length === 2 && chunks[1] !== '') {
-    const version = chunks[1]
     if (chunks[0] === 'branches') {
-      return new SvnVersion(BranchType.BRANCH, version)
+      return new SvnVersion(BranchType.BRANCH, chunks[1])
     }
     if (chunks[0] === 'tags') {
-      return new SvnVersion(BranchType.TAG, version)
+      return new SvnVersion(BranchType.TAG, chunks[1])
     }
   }
 
-  throw Error('Could not parse version from URL')
+  throw Error(`Could not parse version from url "${url}"`)
+}
+
+function extractVersionPartFromUrl(url: string): string {
+  const regex = /(trunk|branches\/[^\/]*|tags\/[^\/]*)/
+  const match = regex.exec(url)
+
+  if (!match) {
+    throw Error(`Could not extract version part from url "${url}"`)
+  }
+
+  return match[1]
 }
 
 /**
