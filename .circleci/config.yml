@@ -23,7 +23,10 @@ jobs:
       - run:
           command: npm test
           environment:
-            JEST_JUNIT_OUTPUT: 'reports/junit/js-test-results.xml'
+            JEST_JUNIT_OUTPUT: 'test-results/jest/result.xml'
+
+      - store_test_results:
+          path: test-results
 
   node-lts:
     <<: *test
