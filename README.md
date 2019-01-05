@@ -36,7 +36,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.4/src\commands\help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.4/src/commands/help.ts)_
 
 ## `svn-helper merge [PATH]`
 
@@ -60,7 +60,7 @@ EXAMPLES
   $ svn-helper merge -b branches -v 1.2.3
 ```
 
-_See code: [src\commands\merge.ts](https://github.com/tfriem/svn-helper/blob/v1.1.1/src\commands\merge.ts)_
+_See code: [src/commands/merge.ts](https://github.com/tfriem/svn-helper/blob/v1.1.2/src/commands/merge.ts)_
 
 ## `svn-helper switch [PATH]`
 
@@ -84,7 +84,7 @@ EXAMPLES
   $ svn-helper switch -b branches -v 1.2.3
 ```
 
-_See code: [src\commands\switch.ts](https://github.com/tfriem/svn-helper/blob/v1.1.1/src\commands\switch.ts)_
+_See code: [src/commands/switch.ts](https://github.com/tfriem/svn-helper/blob/v1.1.2/src/commands/switch.ts)_
 
 ## `svn-helper switch-release`
 
@@ -106,7 +106,7 @@ EXAMPLE
   $ svn-helper switch-release -r 1.2
 ```
 
-_See code: [src\commands\switch-release.ts](https://github.com/tfriem/svn-helper/blob/v1.1.1/src\commands\switch-release.ts)_
+_See code: [src/commands/switch-release.ts](https://github.com/tfriem/svn-helper/blob/v1.1.2/src/commands/switch-release.ts)_
 
 ## `svn-helper switch-subsystem [SUBSYSTEM]`
 
@@ -130,7 +130,7 @@ EXAMPLES
   $ svn-helper switch-subsystem -b branches -v 1.2.3 subsystem1
 ```
 
-_See code: [src\commands\switch-subsystem.ts](https://github.com/tfriem/svn-helper/blob/v1.1.1/src\commands\switch-subsystem.ts)_
+_See code: [src/commands/switch-subsystem.ts](https://github.com/tfriem/svn-helper/blob/v1.1.2/src/commands/switch-subsystem.ts)_
 <!-- commandsstop -->
 
 ## Config example
