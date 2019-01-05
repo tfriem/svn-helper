@@ -14,38 +14,33 @@ _svn-helper_ is a command line tool that aims to improve working with multiple s
 
 ### Commands
 
-```
-USAGE
-  $ svn-helper [COMMAND]
+  <!-- commands -->
+* [`svn-helper help [COMMAND]`](#svn-helper-help-command)
+* [`svn-helper merge [PATH]`](#svn-helper-merge-path)
+* [`svn-helper switch [PATH]`](#svn-helper-switch-path)
+* [`svn-helper switch-release`](#svn-helper-switch-release)
+* [`svn-helper switch-subsystem [SUBSYSTEM]`](#svn-helper-switch-subsystem-subsystem)
 
-COMMANDS
-  help              display help for svn-helper
-  switch            switch repository to a different version
-  switch-release    switch repositories to configured release versions
-  switch-subsystem  switch repositories for a configured subsystem to a different version
-```
+## `svn-helper help [COMMAND]`
 
-### Switch
+display help for svn-helper
 
 ```
 USAGE
-  $ svn-helper switch [PATH]
+  $ svn-helper help [COMMAND]
+
+ARGUMENTS
+  COMMAND  command to show help for
 
 OPTIONS
-  -b, --branch=(trunk|branches|tags)  branch type
-  -h, --help                          show CLI help
-  -q, --quiet                         supress svn output
-  -v, --version=version               version
-
-ALIASES
-  $ svn-helper sw
-
-EXAMPLES
-  $ svn-helper switch -b trunk
-  $ svn-helper switch -b branches -v 1.2.3
+  --all  see all commands in CLI
 ```
 
-### Merge
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.4/src\commands\help.ts)_
+
+## `svn-helper merge [PATH]`
+
+merge from another version
 
 ```
 USAGE
@@ -65,7 +60,35 @@ EXAMPLES
   $ svn-helper merge -b branches -v 1.2.3
 ```
 
-### Switch-Release
+_See code: [src\commands\merge.ts](https://github.com/tfriem/svn-helper/blob/v1.1.1/src\commands\merge.ts)_
+
+## `svn-helper switch [PATH]`
+
+switch repository to a different version
+
+```
+USAGE
+  $ svn-helper switch [PATH]
+
+OPTIONS
+  -b, --branch=(trunk|branches|tags)  branch type
+  -h, --help                          show CLI help
+  -q, --quiet                         supress svn output
+  -v, --version=version               version
+
+ALIASES
+  $ svn-helper sw
+
+EXAMPLES
+  $ svn-helper switch -b trunk
+  $ svn-helper switch -b branches -v 1.2.3
+```
+
+_See code: [src\commands\switch.ts](https://github.com/tfriem/svn-helper/blob/v1.1.1/src\commands\switch.ts)_
+
+## `svn-helper switch-release`
+
+switch repositories to configured release versions
 
 ```
 USAGE
@@ -81,10 +104,13 @@ ALIASES
 
 EXAMPLE
   $ svn-helper switch-release -r 1.2
-
 ```
 
-### Switch-Subsystem
+_See code: [src\commands\switch-release.ts](https://github.com/tfriem/svn-helper/blob/v1.1.1/src\commands\switch-release.ts)_
+
+## `svn-helper switch-subsystem [SUBSYSTEM]`
+
+switch repositories for a configured subsystem to a different version
 
 ```
 USAGE
@@ -103,6 +129,9 @@ EXAMPLES
   $ svn-helper switch-subsystem -b trunk subsystem1
   $ svn-helper switch-subsystem -b branches -v 1.2.3 subsystem1
 ```
+
+_See code: [src\commands\switch-subsystem.ts](https://github.com/tfriem/svn-helper/blob/v1.1.1/src\commands\switch-subsystem.ts)_
+<!-- commandsstop -->
 
 ## Config example
 
