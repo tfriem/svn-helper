@@ -2,6 +2,7 @@
   "name": "svn-helper",
   "version": "1.1.2",
   "author": "Tobias Friemel @tfriem",
+  "description": "svn-helper is a command line tool that aims to improve working with multiple subversion repositories at specific versions. For this it provides commands to switch multiple working copies at once.",
   "bin": {
     "svn-helper": "./bin/run"
   },
