@@ -1,5 +1,7 @@
+import {xml2js} from 'xml-js'
+
 import {getVersionsFromServer} from './helper'
-import {svnMerge, svnSwitch} from './shell'
+import {svnLogXml, svnMerge, svnMergeInfo, svnSwitch} from './shell'
 import {
   changeSvnVersionInUrl,
   getSvnVersionFromUrl,
@@ -47,12 +49,13 @@ export async function getVersionFromWorkingCopy(
  */
 export async function mergeFromVersion(
   path: string,
-  version: SvnVersion
+  version: SvnVersion,
+  revisions: Array<number>
 ): Promise<string> {
   const url = await getUrlFromWorkingCopy(path)
   const newUrl = changeSvnVersionInUrl(url, version)
 
-  const result = await svnMerge(path, newUrl)
+  const result = await svnMerge(path, newUrl, revisions)
 
   if (result.failed) {
     throw Error(result.stderr)
@@ -75,6 +78,54 @@ export async function getBranchVersions(path: string): Promise<Array<string>> {
  */
 export async function getTagVersions(path: string): Promise<Array<string>> {
   return getVersionsFromServer(path, 'tags')
+}
+
+export async function getEligible(
+  path: string,
+  version: SvnVersion
+): Promise<Array<number>> {
+  const url = await getUrlFromWorkingCopy(path)
+  const newUrl = changeSvnVersionInUrl(url, version)
+
+  const result = await svnMergeInfo(path, newUrl)
+
+  return result.stdout
+    .split(/\r?\n/)
+    .map(str => parseInt(str.replace('r', ''), 10))
+}
+
+export async function getLogsFromVersion(
+  path: string,
+  version: SvnVersion,
+  revisions: Array<number>
+): Promise<Array<LogEntry>> {
+  const url = await getUrlFromWorkingCopy(path)
+  const newUrl = changeSvnVersionInUrl(url, version)
+
+  const result = await svnLogXml(newUrl, revisions)
+
+  // @ts-ignore
+  const logs = xml2js(result.stdout, {compact: true}).log.logentry
+
+  return logs.map(
+    (log: {
+      _attributes: {revision: string}
+      author: {_text: any}
+      msg: {_text: any}
+    }) => {
+      return {
+        revision: parseInt(log._attributes.revision, 10),
+        author: log.author._text,
+        message: log.msg._text
+      }
+    }
+  )
+}
+
+export interface LogEntry {
+  revision: number
+  author: string
+  message: string
 }
 
 export {BranchType, SvnVersion} from './version'

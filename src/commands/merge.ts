@@ -2,6 +2,7 @@ import {Command, flags} from '@oclif/command'
 
 import {
   askForBranch,
+  askForRevisions,
   askForVersion,
   getSvnBranchTypeFromString,
   versionRequired
@@ -18,6 +19,10 @@ export default class Merge extends Command {
     branch: branchFlag,
     version: versionFlag,
     quiet: quietFlag,
+    cherryPicking: flags.boolean({
+      char: 'c',
+      description: 'Activate cherry picking of commits to merge'
+    }),
     help: flags.help({char: 'h'})
   }
 
@@ -34,6 +39,7 @@ export default class Merge extends Command {
     const path = args.path
     let branch = flags.branch
     let version = flags.version
+    const cherryPicking = flags.cherryPicking
 
     if (!branch) {
       branch = await askForBranch()
@@ -45,9 +51,18 @@ export default class Merge extends Command {
       version = await askForVersion(path, branchType)
     }
 
+    let revs: Array<number> = []
+
+    if (cherryPicking) {
+      const targetVersion = new SvnVersion(branchType, version)
+
+      revs = await askForRevisions(path, targetVersion)
+    }
+
     const output = await mergeFromVersion(
       path,
-      new SvnVersion(branchType, version)
+      new SvnVersion(branchType, version),
+      revs
     )
     if (!flags.quiet) {
       this.log(output)

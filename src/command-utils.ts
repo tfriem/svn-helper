@@ -10,6 +10,8 @@ inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 import {
   BranchType,
   getBranchVersions,
+  getEligible,
+  getLogsFromVersion,
   getTagVersions,
   getVersionFromWorkingCopy,
   SvnVersion,
@@ -40,6 +42,21 @@ export async function askForBranch(): Promise<string> {
   return ask('Branch', ['trunk', 'branches', 'tags'])
 }
 
+export async function askForRevisions(
+  path: string,
+  version: SvnVersion
+): Promise<Array<number>> {
+  const eligible = await getEligible(path, version)
+
+  const logs = await getLogsFromVersion(path, version, eligible)
+  const choices = logs.map(log => {
+    return {name: log.message, value: log.revision}
+  })
+  const answers = await askChoices('Revisions', choices)
+
+  return answers.map(answer => parseInt(answer, 10))
+}
+
 export async function ask(
   topic: string,
   options: Array<string>
@@ -54,6 +71,22 @@ export async function ask(
         input = input || ''
         return fuzzy.filter(input, options).map(res => res.original)
       }
+    }
+  ])
+
+  return responses.result
+}
+
+export async function askChoices(
+  topic: string,
+  choices: Array<string> | Array<inquirer.ChoiceType>
+): Promise<Array<string>> {
+  const responses: {result: Array<string>} = await inquirer.prompt([
+    {
+      name: 'result',
+      type: 'checkbox',
+      message: topic,
+      choices
     }
   ])
 

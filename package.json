@@ -20,7 +20,8 @@
     "inquirer-autocomplete-prompt": "^1.0.1",
     "listr": "^0.14.3",
     "lodash": "^4.17.11",
-    "tslib": "^1.9.3"
+    "tslib": "^1.9.3",
+    "xml-js": "^1.6.8"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
