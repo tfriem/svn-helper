@@ -12,3 +12,10 @@ export const quietFlag = flags.boolean({
 })
 
 export const versionFlag = flags.string({char: 'v', description: 'version'})
+
+export const concurrencyFlag = flags.integer({
+  char: 'c',
+  description: 'number of concurrent running tasks (0 = infinity)'
+})
+
+export const helpFlag = flags.help({char: 'h'})
