@@ -104,10 +104,15 @@ export function createSwitchTask(
   }
 }
 
-export async function runTasks(tasks: Array<Listr.ListrTask>, quiet: boolean) {
+export async function runTasks(
+  tasks: Array<Listr.ListrTask>,
+  quiet: boolean,
+  concurrency = 0
+) {
   try {
+    const concurrent = concurrency === 0 ? true : concurrency
     const context = await new Listr(tasks, {
-      concurrent: true,
+      concurrent,
       exitOnError: false
     }).run({
       results: []

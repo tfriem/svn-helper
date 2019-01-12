@@ -1,35 +1,27 @@
-import {Command, flags} from '@oclif/command'
+import {flags} from '@oclif/command'
 import * as _ from 'lodash'
 
-import {
-  ask,
-  createSwitchTask,
-  getSvnVersionFromConfig,
-  runTasks
-} from '../command-utils'
+import {ask, createSwitchTask, getSvnVersionFromConfig} from '../command-utils'
 import {readConfig} from '../config'
-import {quietFlag} from '../flags'
+import {TaskCommand} from '../task-command'
 
-export default class SwitchRelease extends Command {
+export default class SwitchRelease extends TaskCommand {
   static description = 'switch repositories to configured release versions'
 
   static aliases = ['swr']
 
   static flags = {
+    ...TaskCommand.flags,
     release: flags.string({
       char: 'r',
       description: 'release name'
-    }),
-    quiet: quietFlag,
-    help: flags.help({char: 'h'})
+    })
   }
 
   static examples = ['$ svn-helper switch-release -r 1.2']
 
   async run() {
     const {flags} = this.parse(SwitchRelease)
-
-    const quiet = flags.quiet
 
     const userConfig = await readConfig()
 
@@ -57,6 +49,6 @@ export default class SwitchRelease extends Command {
       )
       .value()
 
-    await runTasks(tasks, quiet)
+    await this.runTasks(tasks)
   }
 }
