@@ -14,14 +14,14 @@ describe('Commands', () => {
         releases: [
           {
             name: 'AllTrunk',
-            versions: [{name: 'trunk', projects: ['proj1', 'proj2']}]
+            versions: [{ name: 'trunk', projects: ['proj1', 'proj2'] }]
           }
-        ]
+        ], subsystems: []
       })
 
       jest
         .spyOn(svn, 'getVersionFromWorkingCopy')
-        .mockResolvedValue({type: svn.BranchType.BRANCH, version: '1.0.x'})
+        .mockResolvedValue({ type: svn.BranchType.BRANCH, version: '1.0.x' })
 
       const switchToVersionMock = jest
         .spyOn(svn, 'switchToVersion')
@@ -44,14 +44,14 @@ describe('Commands', () => {
         releases: [
           {
             name: 'AllTrunk',
-            versions: [{name: 'trunk', projects: ['proj1', 'proj2']}]
+            versions: [{ name: 'trunk', projects: ['proj1', 'proj2'] }]
           }
-        ]
+        ], subsystems: []
       })
 
       jest
         .spyOn(svn, 'getVersionFromWorkingCopy')
-        .mockResolvedValue({type: svn.BranchType.BRANCH, version: '1.0.x'})
+        .mockResolvedValue({ type: svn.BranchType.BRANCH, version: '1.0.x' })
 
       const switchToVersionMock = jest
         .spyOn(svn, 'switchToVersion')
@@ -73,14 +73,14 @@ describe('Commands', () => {
         releases: [
           {
             name: 'AllTrunk',
-            versions: [{name: 'trunk', projects: ['proj1', 'proj2']}]
+            versions: [{ name: 'trunk', projects: ['proj1', 'proj2'] }]
           }
-        ]
+        ], subsystems: []
       })
 
       jest
         .spyOn(svn, 'getVersionFromWorkingCopy')
-        .mockResolvedValue({type: svn.BranchType.BRANCH, version: '1.0.x'})
+        .mockResolvedValue({ type: svn.BranchType.BRANCH, version: '1.0.x' })
 
       const switchToVersionMock = jest
         .spyOn(svn, 'switchToVersion')

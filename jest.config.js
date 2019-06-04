@@ -7,5 +7,10 @@ module.exports = {
     '!**/test/**',
     '!src/index.ts'
   ],
-  reporters: ['default', 'jest-junit']
+  reporters: ['default', 'jest-junit'],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
+    }
+  }
 }
